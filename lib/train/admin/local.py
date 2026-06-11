@@ -1,10 +1,10 @@
 class EnvironmentSettings:
     def __init__(self):
-        self.workspace_dir = '/home/professor12/OSTrack-main/output'
+        self.workspace_dir = '/home/professor4/OSTrack-main/output'
         self.tensorboard_dir = self.workspace_dir + '/tensorboard/'
-        self.pretrained_networks = '/home/professor12/OSTrack-main/pretrained_models'
+        self.pretrained_networks = '/home/professor4/OSTrack-main/pretrained_models'
 
-        data_dir = '/home/professor12/OSTrack-main/data'
+        data_dir = '/home/professor4/OSTrack-main/data'
         self.lasot_dir = data_dir + '/lasot'
         self.lasot_lmdb_dir = data_dir + '/lasot_lmdb'
         self.got10k_dir = data_dir + '/got10k/train'

@@ -4,10 +4,10 @@ from lib.test.evaluation.environment import EnvSettings
 def local_env_settings():
     settings = EnvSettings()
 
-    data_dir = '/home/professor12/OSTrack-main/data'
-    save_dir = '/home/professor12/OSTrack-main/output'
+    data_dir = '/home/professor4/OSTrack-main/data'
+    save_dir = '/home/professor4/OSTrack-main/output'
 
-    settings.prj_dir = '/home/professor12/OSTrack-main'
+    settings.prj_dir = '/home/professor4/OSTrack-main'
     settings.save_dir = save_dir
     settings.results_path = save_dir + '/test/tracking_results'
     settings.segmentation_path = save_dir + '/test/segmentation_results'
