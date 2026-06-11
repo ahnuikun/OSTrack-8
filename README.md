@@ -1,4 +1,4 @@
-# OSTrack
+# OSTrack-8
 OSTrack reproduction and adaptation for UAV object tracking.
 
 The official implementation for the **ECCV 2022** paper [_Joint Feature Learning and Relation Modeling for Tracking: A One-Stream Framework_](https://arxiv.org/abs/2203.11991).
