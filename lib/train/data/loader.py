@@ -18,6 +18,15 @@ def _check_use_shared_memory():
     return torch.utils.data.get_worker_info() is not None
 
 
+def _new_shared_stack_output(batch, dim):
+    elem = batch[0]
+    numel = sum([x.numel() for x in batch])
+    storage = elem._typed_storage()._new_shared(numel, device=elem.device)
+    output_size = list(elem.size())
+    output_size.insert(dim, len(batch))
+    return elem.new(storage).resize_(*output_size)
+
+
 def ltr_collate(batch):
     """Puts each data field into a tensor with outer dimension batch size"""
 
@@ -28,9 +37,7 @@ def ltr_collate(batch):
         if _check_use_shared_memory():
             # If we're in a background process, concatenate directly into a
             # shared memory tensor to avoid an extra copy
-            numel = sum([x.numel() for x in batch])
-            storage = batch[0].storage()._new_shared(numel)
-            out = batch[0].new(storage)
+            out = _new_shared_stack_output(batch, 0)
         return torch.stack(batch, 0, out=out)
         # if batch[0].dim() < 4:
         #     return torch.stack(batch, 0, out=out)
@@ -78,9 +85,7 @@ def ltr_collate_stack1(batch):
         if _check_use_shared_memory():
             # If we're in a background process, concatenate directly into a
             # shared memory tensor to avoid an extra copy
-            numel = sum([x.numel() for x in batch])
-            storage = batch[0].storage()._new_shared(numel)
-            out = batch[0].new(storage)
+            out = _new_shared_stack_output(batch, 1)
         return torch.stack(batch, 1, out=out)
         # if batch[0].dim() < 4:
         #     return torch.stack(batch, 0, out=out)
