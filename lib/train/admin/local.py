@@ -5,7 +5,7 @@ class EnvironmentSettings:
         self.pretrained_networks = '/home/professor4/OSTrack-main/pretrained_models'
 
         data_dir = '/home/professor4/OSTrack-main/data'
-        self.lasot_dir = data_dir + '/lasot'
+        self.lasot_dir = data_dir + '/lasot/train'
         self.lasot_lmdb_dir = data_dir + '/lasot_lmdb'
         self.got10k_dir = data_dir + '/got10k/train'
         self.got10k_val_dir = data_dir + '/got10k/val'

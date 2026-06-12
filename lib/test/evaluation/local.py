@@ -26,7 +26,7 @@ def local_env_settings():
     settings.vot22_path = data_dir + '/vot2022'
     settings.got10k_path = data_dir + '/got10k'
     settings.got10k_lmdb_path = data_dir + '/got10k_lmdb'
-    settings.lasot_path = data_dir + '/lasot'
+    settings.lasot_path = data_dir + '/lasot/test'
     settings.lasot_lmdb_path = data_dir + '/lasot_lmdb'
     settings.trackingnet_path = data_dir + '/trackingnet'
     settings.itb_path = data_dir + '/itb'
