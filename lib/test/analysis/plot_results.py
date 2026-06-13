@@ -1,12 +1,21 @@
-import tikzplotlib
-import matplotlib
-import matplotlib.pyplot as plt
 import os
 import torch
 import pickle
 import json
 from lib.test.evaluation.environment import env_settings
 from lib.test.analysis.extract_results import extract_results
+
+try:
+    import matplotlib
+    import matplotlib.pyplot as plt
+except ImportError:
+    matplotlib = None
+    plt = None
+
+try:
+    import tikzplotlib
+except ImportError:
+    tikzplotlib = None
 
 
 def get_plot_draw_styles():
@@ -100,6 +109,9 @@ def get_tracker_display_name(tracker):
 
 
 def plot_draw_save(y, x, scores, trackers, plot_draw_styles, result_plot_path, plot_opts):
+    if plt is None:
+        raise ImportError('matplotlib is required to draw plots. Install matplotlib or use print_results only.')
+
     plt.rcParams['text.usetex']=True
     plt.rcParams["font.family"] = "Times New Roman"
     # Plot settings
@@ -113,7 +125,7 @@ def plot_draw_save(y, x, scores, trackers, plot_draw_styles, result_plot_path, p
 
     xlabel = plot_opts['xlabel']
     ylabel = plot_opts['ylabel']
-    ylabel = "%s"%(ylabel.replace('%','\%'))
+    ylabel = "%s"%(ylabel.replace('%', '\\%'))
     xlim = plot_opts['xlim']
     ylim = plot_opts['ylim']
 
@@ -162,6 +174,8 @@ def plot_draw_save(y, x, scores, trackers, plot_draw_styles, result_plot_path, p
     ax.grid(True, linestyle='-.')
     fig.tight_layout()
 
+    if tikzplotlib is None:
+        raise ImportError('tikzplotlib is required to save tikz plots. Install tikzplotlib or use print_results only.')
     tikzplotlib.save('{}/{}_plot.tex'.format(result_plot_path, plot_type))
     fig.savefig('{}/{}_plot.pdf'.format(result_plot_path, plot_type), dpi=300, format='pdf', transparent=True)
     plt.draw()
