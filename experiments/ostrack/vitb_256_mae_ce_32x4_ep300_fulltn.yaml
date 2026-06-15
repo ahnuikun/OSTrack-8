@@ -24,7 +24,7 @@ DATA:
     - LASOT
     - GOT10K_vottrain
     - COCO17
-    - TRACKINGNET_TRAIN012
+    - TRACKINGNET
     DATASETS_RATIO:
     - 1
     - 1
