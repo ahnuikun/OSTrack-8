@@ -12,13 +12,14 @@ from torch.nn.modules.transformer import _get_clones
 from lib.models.layers.head import build_box_head
 from lib.models.ostrack.vit import vit_base_patch16_224
 from lib.models.ostrack.vit_ce import vit_large_patch16_224_ce, vit_base_patch16_224_ce
+from lib.models.ostrack.uav_modules import build_multi_scale_token_fusion
 from lib.utils.box_ops import box_xyxy_to_cxcywh
 
 
 class OSTrack(nn.Module):
     """ This is the base class for OSTrack """
 
-    def __init__(self, transformer, box_head, aux_loss=False, head_type="CORNER"):
+    def __init__(self, transformer, box_head, multi_scale_fusion=None, aux_loss=False, head_type="CORNER"):
         """ Initializes the model.
         Parameters:
             transformer: torch module of the transformer architecture.
@@ -27,6 +28,7 @@ class OSTrack(nn.Module):
         super().__init__()
         self.backbone = transformer
         self.box_head = box_head
+        self.multi_scale_fusion = multi_scale_fusion
 
         self.aux_loss = aux_loss
         self.head_type = head_type
@@ -66,6 +68,8 @@ class OSTrack(nn.Module):
         opt = (enc_opt.unsqueeze(-1)).permute((0, 3, 2, 1)).contiguous()
         bs, Nq, C, HW = opt.size()
         opt_feat = opt.view(-1, C, self.feat_sz_s, self.feat_sz_s)
+        if self.multi_scale_fusion is not None:
+            opt_feat = self.multi_scale_fusion(opt_feat)
 
         if self.head_type == "CORNER":
             # run the corner head
@@ -128,10 +132,14 @@ def build_ostrack(cfg, training=True):
     backbone.finetune_track(cfg=cfg, patch_start_index=patch_start_index)
 
     box_head = build_box_head(cfg, hidden_dim)
+    multi_scale_fusion = build_multi_scale_token_fusion(cfg, hidden_dim)
+    if multi_scale_fusion is not None:
+        print("MSTF multi-scale token fusion enabled")
 
     model = OSTrack(
         backbone,
         box_head,
+        multi_scale_fusion=multi_scale_fusion,
         aux_loss=False,
         head_type=cfg.MODEL.HEAD.TYPE,
     )
