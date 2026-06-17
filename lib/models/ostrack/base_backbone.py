@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from timm.models.vision_transformer import resize_pos_embed
-from timm.models.layers import DropPath, to_2tuple, trunc_normal_
+from timm.layers import DropPath, to_2tuple, trunc_normal_
 
 from lib.models.layers.patch_embed import PatchEmbed
 from lib.models.ostrack.utils import combine_tokens, recover_tokens

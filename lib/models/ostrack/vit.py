@@ -28,9 +28,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from timm.data import IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD, IMAGENET_INCEPTION_MEAN, IMAGENET_INCEPTION_STD
-from timm.models.helpers import build_model_with_cfg, named_apply, adapt_input_conv
-from timm.models.layers import Mlp, DropPath, trunc_normal_, lecun_normal_
-from timm.models.registry import register_model
+from timm.models import build_model_with_cfg, named_apply, adapt_input_conv
+from timm.layers import Mlp, DropPath, trunc_normal_, lecun_normal_
+from timm.models import register_model
 
 from lib.models.layers.patch_embed import PatchEmbed
 from lib.models.ostrack.base_backbone import BaseBackbone

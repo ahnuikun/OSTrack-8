@@ -64,12 +64,18 @@ class OSTrack(nn.Module):
         """
         cat_feature: output embeddings of the backbone, it can be (HW1+HW2, B, C) or (HW2, B, C)
         """
+        template_tokens = cat_feature[:, :-self.feat_len_s]  # template tokens for target-guided MSTF (B, HW, C)
         enc_opt = cat_feature[:, -self.feat_len_s:]  # encoder output for the search region (B, HW, C)
         opt = (enc_opt.unsqueeze(-1)).permute((0, 3, 2, 1)).contiguous()
         bs, Nq, C, HW = opt.size()
         opt_feat = opt.view(-1, C, self.feat_sz_s, self.feat_sz_s)
+        mstf_aux = {}
         if self.multi_scale_fusion is not None:
-            opt_feat = self.multi_scale_fusion(opt_feat)
+            mstf_out = self.multi_scale_fusion(opt_feat, template_tokens, return_aux=True)
+            if isinstance(mstf_out, tuple):
+                opt_feat, mstf_aux = mstf_out
+            else:
+                opt_feat = mstf_out
 
         if self.head_type == "CORNER":
             # run the corner head
@@ -79,6 +85,7 @@ class OSTrack(nn.Module):
             out = {'pred_boxes': outputs_coord_new,
                    'score_map': score_map,
                    }
+            out.update(mstf_aux)
             return out
 
         elif self.head_type == "CENTER":
@@ -91,6 +98,7 @@ class OSTrack(nn.Module):
                    'score_map': score_map_ctr,
                    'size_map': size_map,
                    'offset_map': offset_map}
+            out.update(mstf_aux)
             return out
         else:
             raise NotImplementedError

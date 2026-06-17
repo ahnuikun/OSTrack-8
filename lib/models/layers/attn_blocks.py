@@ -1,7 +1,7 @@
 import math
 import torch
 import torch.nn as nn
-from timm.models.layers import Mlp, DropPath, trunc_normal_, lecun_normal_
+from timm.layers import Mlp, DropPath, trunc_normal_, lecun_normal_
 
 from lib.models.layers.attn import Attention
 
